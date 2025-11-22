@@ -1,0 +1,83 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+header {
+    background-color: #333;
+    color: white;
+    padding: 15px;
+    text-align: center;
+}
+
+main {
+    display: flex;
+    flex: 1; /* Permette al main di espandersi e riempire lo spazio */
+}
+
+/* Sidebar (Menu di Navigazione) */
+#sidebar {
+    width: 280px;
+    background-color: #f4f4f4;
+    padding: 20px;
+    border-right: 1px solid #ccc;
+    overflow-y: auto; /* Scorri se il contenuto è troppo lungo */
+}
+
+#tree-view {
+    list-style-type: none;
+    padding: 0;
+}
+
+/* Nasconde le sottocartelle per impostazione predefinita */
+.folder > ul {
+    display: none;
+    margin-left: 15px;
+}
+
+/* Stile per le cartelle espandibili */
+.folder > span {
+    cursor: pointer;
+    font-weight: bold;
+    display: block;
+    padding: 3px 0;
+}
+
+/* Stile per i file */
+.file > a {
+    text-decoration: none;
+    color: #007bff;
+    display: block;
+    padding: 3px 0;
+}
+
+.file > a:hover {
+    text-decoration: underline;
+}
+
+/* Contenuto principale */
+#content {
+    flex: 1; /* Il contenuto occupa il resto dello spazio */
+    padding: 30px;
+    overflow-y: auto;
+}
+
+#content-display {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* Stile per il contenuto Markdown */
+#content-display h1 { border-bottom: 2px solid #eee; padding-bottom: 5px; }
+#content-display pre { background-color: #eee; padding: 10px; border-radius: 4px; overflow-x: auto; }
+
+footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 10px;
+}
