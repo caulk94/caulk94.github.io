@@ -1,50 +1,43 @@
-/* Definizioni dei Colori per la Shell */
+/* Definizioni dei Colori per la Shell (Invariate) */
 :root {
-    --shell-prompt-color: #00ff7f; /* Verde brillante, tipico del prompt */
-    --shell-warning-color: #ffaa00; /* Giallo/Arancione */
-    --shell-error-color: #ff0000;   /* Rosso */
-    --shell-info-color: #4a90e2;    /* Blu (lo stesso dell'accento) */
-    --shell-title-color: #ffffff;   /* Bianco puro per i titoli principali */
-    --shell-separator-color: #555;  /* Linea di separazione più scura */
+    --shell-prompt-color: #00ff7f; 
+    --shell-warning-color: #ffaa00; 
+    --shell-error-color: #ff0000;   
+    --shell-info-color: #4a90e2;    
+    --shell-title-color: #ffffff;   
+    --shell-separator-color: #555;  
 }
 
 /* -------------------- STILI SPECIFICI PER GLI HEADER (ALTA SPECIFICITÀ) -------------------- */
-
-/* Reset degli stili per il contenuto principale (Include #content-display) */
-#content-display h1, 
-#content-display h2, 
-#content-display h3 {
-    padding-bottom: 5px;
-    margin-top: 35px;
-    border-bottom: 1px solid var(--shell-separator-color) !important; /* Aggiunto !important come ultima risorsa */
-    font-family: 'Consolas', 'Monospace', monospace; 
-    font-weight: bold;
-}
 
 /* H1: Titolo principale */
 #content-display h1 {
     color: var(--shell-title-color);
     font-size: 2.2em;
-    border-bottom: 2px solid var(--shell-separator-color) !important;
+    border-bottom: 2px solid var(--shell-separator-color); 
     padding-bottom: 10px;
+    /* Aggiungi qui le regole di font e margin che vuoi garantire */
+    font-family: 'Consolas', 'Monospace', monospace !important; 
 }
 
 /* H2: Sezioni Principali */
 #content-display h2 {
-    color: var(--shell-prompt-color) !important; 
+    color: var(--shell-prompt-color) !important; /* Forza il colore verde */
     font-size: 1.6em;
-    border-bottom: none !important;
+    border-bottom: none !important; /* Rimuove le linee orizzontali del tema */
+    font-family: 'Consolas', 'Monospace', monospace; 
 }
 
 /* H3: Sottosezioni / Dettagli */
 #content-display h3 {
-    color: var(--shell-warning-color) !important; 
+    color: var(--shell-warning-color) !important; /* Forza il colore giallo */
     font-size: 1.3em;
     border-bottom: none !important; 
     margin-top: 25px;
+    font-family: 'Consolas', 'Monospace', monospace; 
 }
 
-/* -------------------- MIGLIORIE PER BLOCCHI DI CODICE E TESTO -------------------- */
+/* -------------------- MIGLIORIE PER BLOCCHI DI CODICE -------------------- */
 
 /* Miglioriamo l'aspetto dei blocchi di codice */
 #content-display pre { 
@@ -53,7 +46,6 @@
     border-left: 5px solid var(--shell-info-color) !important; 
     padding: 15px !important; 
     border-radius: 6px !important; 
-    font-family: 'Consolas', 'Monospace', monospace !important;
 }
 
 /* Stile per il codice inline */
@@ -62,13 +54,4 @@
     color: var(--shell-prompt-color) !important; 
     padding: 2px 4px !important;
     border-radius: 3px !important;
-}
-
-/* Messaggi di errore o note importanti */
-#content-display blockquote {
-    margin: 15px 0 !important;
-    padding: 10px 20px !important;
-    border-left: 4px solid var(--shell-error-color) !important; 
-    background-color: #383c42 !important;
-    color: var(--text-color) !important;
 }
