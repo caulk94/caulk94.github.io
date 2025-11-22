@@ -1,15 +1,13 @@
-/* Color Palette Dark Mode (Invariato) */
+/* Color Palette Dark Mode */
 :root {
-    --bg-color: #282c34;
-    --surface-color: #383c42;
-    --text-color: #ffffff;
-    --text-secondary: #aaaaaa;
-    --accent-color: #4a90e2;
-    --sidebar-bg: #1c1f23;
-    --active-item: #33363b;
+    --bg-color: #282c34;       /* Sfondo scuro principale */
+    --surface-color: #383c42;  /* Colore schede/contenuto */
+    --text-color: #ffffff;     /* Testo chiaro */
+    --text-secondary: #aaaaaa; /* Testo secondario */
+    --accent-color: #4a90e2;   /* Colore accento/link */
+    --sidebar-bg: #1c1f23;     /* Sfondo sidebar più scuro */
+    --active-item: #33363b;    /* Hover/selezionato */
 }
-
-/* ... (LAYOUT BASE e PROFILO & NAVIGAZIONE FISSA invariati) ... */
 
 body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -20,110 +18,186 @@ body {
     color: var(--text-color);
     min-height: 100vh;
 }
-/* ... (main, sidebar, profile, nav-item, etc. invariati) ... */
 
-
-/* -------------------- ALBERATURA GUIDE GERARCHICA -------------------- */
-
-/* Il contenitore UL principale */
-#tree-view.main-tree {
-    list-style-type: none;
-    padding: 0; 
-    margin: 5px 0 10px 0;
+header {
+    /* Rimosso o nascosto per il layout mostrato */
+    display: none;
 }
 
-/* Correzione del Nodo Radice LI (Hack The Box) */
-#tree-view > li.folder {
-    list-style: none;
-    margin: 0; 
-    padding: 0;
-}
-
-/* Stile applicato al tag SPAN di tutte le cartelle */
-#tree-view .folder > span {
-    /* 🟥 MODIFICA CHIAVE: Usa Flexbox per allineare gli elementi */
+main {
     display: flex;
-    align-items: center;
-    justify-content: space-between; /* Spinge gli estremi ai lati */
-    
-    padding: 8px 15px; 
-    color: var(--text-secondary);
-    text-decoration: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.2s, color 0.2s;
+    flex: 1;
 }
 
-/* Applica il padding corretto al nodo radice per allinearlo a Home/About */
-#tree-view > li.folder > span {
-    padding: 10px 15px; 
+/* Sidebar (Menu di Navigazione Fisso) */
+#sidebar {
+    width: 280px;
+    background-color: var(--sidebar-bg);
+    border-right: 1px solid var(--surface-color);
+    position: fixed; /* Sidebar fissa */
+    height: 100%;
+    overflow-y: auto;
+    padding: 20px 0;
 }
 
-#tree-view .folder > span:hover {
-    background-color: var(--active-item);
-    color: var(--text-color);
-}
-
-
-/* Icona della cartella (fa-folder) */
-.folder > span .fa-folder,
-.folder > span .fa-folder-open {
-    /* Manteniamo l'icona a sinistra con il testo, ma rimuoviamo il margin-right per il testo */
-    margin-right: 10px; 
-    width: 18px;
-}
-
-/* Icona per la freccia (triangolo) */
-.folder-icon {
-    /* 🟥 MODIFICA CHIAVE: Rimuove il margine precedente; Flexbox la sposta a destra */
-    margin-right: 0; 
-    width: 10px;
+.profile {
     text-align: center;
-    transition: transform 0.2s;
-    /* Usa margin-left: auto per spingere l'icona a destra del testo */
-    margin-left: auto; 
+    padding: 10px 0 20px 0;
+    border-bottom: 1px solid var(--surface-color);
+    margin-bottom: 20px;
 }
 
-
-/* Sottomenu delle cartelle (lista file e sottocartelle) */
-#tree-view .folder > ul {
-    list-style: none;
-    padding-left: 20px; 
-    margin: 0;
-    display: none; 
+.avatar-container {
+    margin-bottom: 10px;
 }
 
-/* Stile per i FILE (i link veri e propri) */
-.file > a {
-    text-decoration: none;
+.avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 3px solid var(--accent-color);
+    object-fit: cover;
+}
+
+.tagline {
     color: var(--text-secondary);
-    display: flex;
-    align-items: center;
-    padding: 5px 15px;
-    border-left: 2px solid transparent;
-    transition: color 0.2s, border-left 0.2s;
     font-size: 0.9em;
 }
 
-.file > a i {
+/* Navigazione principale (Home, Categories, ecc.) */
+.main-nav {
+    padding: 0 10px;
+    margin-bottom: 30px;
+    border-bottom: 1px solid var(--surface-color);
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.nav-item i {
     margin-right: 15px;
     width: 18px;
     text-align: center;
 }
 
+.nav-item:hover, .nav-item.active {
+    background-color: var(--active-item);
+    color: var(--text-color);
+}
+
+/* Contenuto principale (deve tenere conto della sidebar fissa) */
+#content {
+    flex: 1;
+    margin-left: 280px; /* Sposta il contenuto a destra della sidebar */
+    padding: 30px;
+    overflow-y: auto;
+}
+
+#content-display {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+/* Stile per l'alberatura (Indice Guide) */
+.guide-tree-container {
+    padding: 0 20px;
+}
+
+.guide-tree-container h3 {
+    color: var(--text-color);
+    font-size: 1.1em;
+    padding-bottom: 5px;
+    border-bottom: 1px solid var(--surface-color);
+    margin-bottom: 10px;
+}
+
+#tree-view {
+    list-style-type: none;
+    padding: 0;
+    margin-top: 10px;
+}
+
+.folder > ul {
+    display: none;
+    list-style: none;
+    padding-left: 15px;
+}
+
+.folder > span {
+    cursor: pointer;
+    font-weight: normal;
+    display: block;
+    padding: 5px 0;
+    color: var(--text-secondary);
+    transition: color 0.2s;
+}
+
+.folder > span:hover {
+    color: var(--text-color);
+}
+
+.file > a {
+    text-decoration: none;
+    color: var(--text-secondary);
+    display: block;
+    padding: 5px 0 5px 5px;
+    border-left: 2px solid transparent;
+    transition: color 0.2s, border-left 0.2s;
+}
+
+.file > a:hover {
+    color: var(--text-color);
+}
+
+/* Link attivo */
 .file > a.active {
     color: var(--accent-color);
     font-weight: bold;
     border-left: 2px solid var(--accent-color);
 }
 
-/* -------------------- CONTENUTO PRINCIPALE (Invariato) -------------------- */
 
-#content {
-    flex: 1;
-    margin-left: 280px; 
-    padding: 30px;
-    overflow-y: auto;
+/* Stile per il contenuto Markdown per dark mode */
+#content-display h1, #content-display h2, #content-display h3 { 
+    color: var(--text-color); 
+    border-bottom: 1px solid var(--surface-color);
+    padding-bottom: 5px;
+    margin-top: 30px;
 }
 
-/* ... (Altri stili di contenuto invariati) ... */
+#content-display p, #content-display li {
+    line-height: 1.6;
+    color: var(--text-secondary);
+}
+
+#content-display a {
+    color: var(--accent-color);
+    text-decoration: none;
+}
+
+#content-display pre { 
+    background-color: #1a1e23; /* Sfondo del codice più scuro */
+    color: #e6e6e6; 
+    padding: 15px; 
+    border-radius: 6px; 
+    overflow-x: auto; 
+    font-family: 'Consolas', 'Monospace';
+}
+
+#content-display code {
+    background-color: #383c42;
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-size: 0.9em;
+}
+
+footer {
+    display: none; /* Rimosso */
+}
