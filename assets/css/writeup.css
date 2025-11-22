@@ -1,7 +1,6 @@
 /* Definizioni dei Colori per la Shell */
 :root {
     --shell-prompt-color: #00ff7f; /* Verde brillante, tipico del prompt */
-    --shell-success-color: #00ff7f; /* Verde brillante */
     --shell-warning-color: #ffaa00; /* Giallo/Arancione */
     --shell-error-color: #ff0000;   /* Rosso */
     --shell-info-color: #4a90e2;    /* Blu (lo stesso dell'accento) */
@@ -9,70 +8,67 @@
     --shell-separator-color: #555;  /* Linea di separazione più scura */
 }
 
-/* -------------------- STILI SPECIFICI PER GLI HEADER -------------------- */
+/* -------------------- STILI SPECIFICI PER GLI HEADER (ALTA SPECIFICITÀ) -------------------- */
 
-/* Reset degli stili per il contenuto principale (Sovrascrive style.css) */
-#content-display h1, #content-display h2, #content-display h3 {
+/* Reset degli stili per il contenuto principale (Include #content-display) */
+#content-display h1, 
+#content-display h2, 
+#content-display h3 {
     padding-bottom: 5px;
     margin-top: 35px;
-    border-bottom: 1px solid var(--shell-separator-color);
-    font-family: 'Consolas', 'Monospace', monospace; /* Tipo di carattere fisso */
+    border-bottom: 1px solid var(--shell-separator-color) !important; /* Aggiunto !important come ultima risorsa */
+    font-family: 'Consolas', 'Monospace', monospace; 
     font-weight: bold;
 }
 
-/* H1: Titolo principale (come il nome della guida) */
+/* H1: Titolo principale */
 #content-display h1 {
     color: var(--shell-title-color);
     font-size: 2.2em;
-    border-bottom: 2px solid var(--shell-separator-color); /* Linea più spessa */
+    border-bottom: 2px solid var(--shell-separator-color) !important;
     padding-bottom: 10px;
 }
 
-/* H2: Sezioni Principali (simula l'output di un comando importante) */
+/* H2: Sezioni Principali */
 #content-display h2 {
-    color: var(--shell-prompt-color); /* Verde brillante */
+    color: var(--shell-prompt-color) !important; 
     font-size: 1.6em;
+    border-bottom: none !important;
 }
 
-/* H3: Sottosezioni / Dettagli / Messaggi di Stato */
+/* H3: Sottosezioni / Dettagli */
 #content-display h3 {
-    /* Usiamo il colore Warning per gli avvisi o i passi chiave */
-    color: var(--shell-warning-color); 
+    color: var(--shell-warning-color) !important; 
     font-size: 1.3em;
-    border-bottom: none; /* Non vogliamo linee divisorie troppo frequenti */
+    border-bottom: none !important; 
     margin-top: 25px;
 }
 
 /* -------------------- MIGLIORIE PER BLOCCHI DI CODICE E TESTO -------------------- */
 
-/* Miglioriamo l'aspetto dei blocchi di codice per sembrare una vera finestra shell */
+/* Miglioriamo l'aspetto dei blocchi di codice */
 #content-display pre { 
-    background-color: #1a1e23; 
-    border: 1px solid #333; /* Bordo leggero */
-    border-left: 5px solid var(--shell-info-color); /* Linea colorata a sinistra */
-    padding: 15px; 
-    border-radius: 6px; 
-    overflow-x: auto; 
-    font-family: 'Consolas', 'Monospace', monospace;
-    font-size: 0.95em;
-    line-height: 1.5;
+    background-color: #1a1e23 !important; 
+    border: 1px solid #333 !important; 
+    border-left: 5px solid var(--shell-info-color) !important; 
+    padding: 15px !important; 
+    border-radius: 6px !important; 
+    font-family: 'Consolas', 'Monospace', monospace !important;
 }
 
 /* Stile per il codice inline */
 #content-display code {
-    background-color: #383c42;
-    color: var(--shell-prompt-color); /* Colore verde per il codice inline */
-    padding: 2px 4px;
-    border-radius: 3px;
-    font-size: 0.9em;
+    background-color: #383c42 !important;
+    color: var(--shell-prompt-color) !important; 
+    padding: 2px 4px !important;
+    border-radius: 3px !important;
 }
 
-/* Messaggi di errore o note importanti (se li usi nel Markdown) */
-/* Puoi usare blockquote per enfatizzare l'output critico */
+/* Messaggi di errore o note importanti */
 #content-display blockquote {
-    margin: 15px 0;
-    padding: 10px 20px;
-    border-left: 4px solid var(--shell-error-color); /* Linea rossa per errore */
-    background-color: #383c42;
-    color: var(--text-color);
+    margin: 15px 0 !important;
+    padding: 10px 20px !important;
+    border-left: 4px solid var(--shell-error-color) !important; 
+    background-color: #383c42 !important;
+    color: var(--text-color) !important;
 }
