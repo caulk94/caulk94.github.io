@@ -1,83 +1,203 @@
+/* Color Palette Dark Mode */
+:root {
+    --bg-color: #282c34;       /* Sfondo scuro principale */
+    --surface-color: #383c42;  /* Colore schede/contenuto */
+    --text-color: #ffffff;     /* Testo chiaro */
+    --text-secondary: #aaaaaa; /* Testo secondario */
+    --accent-color: #4a90e2;   /* Colore accento/link */
+    --sidebar-bg: #1c1f23;     /* Sfondo sidebar più scuro */
+    --active-item: #33363b;    /* Hover/selezionato */
+}
+
 body {
-    font-family: Arial, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     margin: 0;
     padding: 0;
     display: flex;
-    flex-direction: column;
+    background-color: var(--bg-color);
+    color: var(--text-color);
     min-height: 100vh;
 }
 
 header {
-    background-color: #333;
-    color: white;
-    padding: 15px;
-    text-align: center;
+    /* Rimosso o nascosto per il layout mostrato */
+    display: none;
 }
 
 main {
     display: flex;
-    flex: 1; /* Permette al main di espandersi e riempire lo spazio */
+    flex: 1;
 }
 
-/* Sidebar (Menu di Navigazione) */
+/* Sidebar (Menu di Navigazione Fisso) */
 #sidebar {
     width: 280px;
-    background-color: #f4f4f4;
-    padding: 20px;
-    border-right: 1px solid #ccc;
-    overflow-y: auto; /* Scorri se il contenuto è troppo lungo */
+    background-color: var(--sidebar-bg);
+    border-right: 1px solid var(--surface-color);
+    position: fixed; /* Sidebar fissa */
+    height: 100%;
+    overflow-y: auto;
+    padding: 20px 0;
 }
 
-#tree-view {
-    list-style-type: none;
-    padding: 0;
+.profile {
+    text-align: center;
+    padding: 10px 0 20px 0;
+    border-bottom: 1px solid var(--surface-color);
+    margin-bottom: 20px;
 }
 
-/* Nasconde le sottocartelle per impostazione predefinita */
-.folder > ul {
-    display: none;
-    margin-left: 15px;
+.avatar-container {
+    margin-bottom: 10px;
 }
 
-/* Stile per le cartelle espandibili */
-.folder > span {
-    cursor: pointer;
-    font-weight: bold;
-    display: block;
-    padding: 3px 0;
+.avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 3px solid var(--accent-color);
+    object-fit: cover;
 }
 
-/* Stile per i file */
-.file > a {
+.tagline {
+    color: var(--text-secondary);
+    font-size: 0.9em;
+}
+
+/* Navigazione principale (Home, Categories, ecc.) */
+.main-nav {
+    padding: 0 10px;
+    margin-bottom: 30px;
+    border-bottom: 1px solid var(--surface-color);
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    color: var(--text-secondary);
     text-decoration: none;
-    color: #007bff;
-    display: block;
-    padding: 3px 0;
+    border-radius: 4px;
+    transition: background-color 0.2s, color 0.2s;
 }
 
-.file > a:hover {
-    text-decoration: underline;
+.nav-item i {
+    margin-right: 15px;
+    width: 18px;
+    text-align: center;
 }
 
-/* Contenuto principale */
+.nav-item:hover, .nav-item.active {
+    background-color: var(--active-item);
+    color: var(--text-color);
+}
+
+/* Contenuto principale (deve tenere conto della sidebar fissa) */
 #content {
-    flex: 1; /* Il contenuto occupa il resto dello spazio */
+    flex: 1;
+    margin-left: 280px; /* Sposta il contenuto a destra della sidebar */
     padding: 30px;
     overflow-y: auto;
 }
 
 #content-display {
-    max-width: 800px;
+    max-width: 900px;
     margin: 0 auto;
 }
 
-/* Stile per il contenuto Markdown */
-#content-display h1 { border-bottom: 2px solid #eee; padding-bottom: 5px; }
-#content-display pre { background-color: #eee; padding: 10px; border-radius: 4px; overflow-x: auto; }
+/* Stile per l'alberatura (Indice Guide) */
+.guide-tree-container {
+    padding: 0 20px;
+}
+
+.guide-tree-container h3 {
+    color: var(--text-color);
+    font-size: 1.1em;
+    padding-bottom: 5px;
+    border-bottom: 1px solid var(--surface-color);
+    margin-bottom: 10px;
+}
+
+#tree-view {
+    list-style-type: none;
+    padding: 0;
+    margin-top: 10px;
+}
+
+.folder > ul {
+    display: none;
+    list-style: none;
+    padding-left: 15px;
+}
+
+.folder > span {
+    cursor: pointer;
+    font-weight: normal;
+    display: block;
+    padding: 5px 0;
+    color: var(--text-secondary);
+    transition: color 0.2s;
+}
+
+.folder > span:hover {
+    color: var(--text-color);
+}
+
+.file > a {
+    text-decoration: none;
+    color: var(--text-secondary);
+    display: block;
+    padding: 5px 0 5px 5px;
+    border-left: 2px solid transparent;
+    transition: color 0.2s, border-left 0.2s;
+}
+
+.file > a:hover {
+    color: var(--text-color);
+}
+
+/* Link attivo */
+.file > a.active {
+    color: var(--accent-color);
+    font-weight: bold;
+    border-left: 2px solid var(--accent-color);
+}
+
+
+/* Stile per il contenuto Markdown per dark mode */
+#content-display h1, #content-display h2, #content-display h3 { 
+    color: var(--text-color); 
+    border-bottom: 1px solid var(--surface-color);
+    padding-bottom: 5px;
+    margin-top: 30px;
+}
+
+#content-display p, #content-display li {
+    line-height: 1.6;
+    color: var(--text-secondary);
+}
+
+#content-display a {
+    color: var(--accent-color);
+    text-decoration: none;
+}
+
+#content-display pre { 
+    background-color: #1a1e23; /* Sfondo del codice più scuro */
+    color: #e6e6e6; 
+    padding: 15px; 
+    border-radius: 6px; 
+    overflow-x: auto; 
+    font-family: 'Consolas', 'Monospace';
+}
+
+#content-display code {
+    background-color: #383c42;
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-size: 0.9em;
+}
 
 footer {
-    background-color: #333;
-    color: white;
-    text-align: center;
-    padding: 10px;
+    display: none; /* Rimosso */
 }
