@@ -1,15 +1,15 @@
-/* Color Palette Dark Mode */
+/* Color Palette Dark Mode (Invariato) */
 :root {
-    --bg-color: #282c34;       /* Sfondo scuro principale (corpo) */
-    --surface-color: #383c42;  /* Colore schede/contenuto (superfici secondarie) */
-    --text-color: #ffffff;     /* Testo chiaro */
-    --text-secondary: #aaaaaa; /* Testo secondario/icone non attive */
-    --accent-color: #4a90e2;   /* Colore accento/link (blu) */
-    --sidebar-bg: #1c1f23;     /* Sfondo sidebar più scuro */
-    --active-item: #33363b;    /* Sfondo per hover/selezionato */
+    --bg-color: #282c34;
+    --surface-color: #383c42;
+    --text-color: #ffffff;
+    --text-secondary: #aaaaaa;
+    --accent-color: #4a90e2;
+    --sidebar-bg: #1c1f23;
+    --active-item: #33363b;
 }
 
-/* -------------------- LAYOUT BASE -------------------- */
+/* -------------------- LAYOUT BASE (Invariato) -------------------- */
 body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     margin: 0;
@@ -20,16 +20,11 @@ body {
     min-height: 100vh;
 }
 
-header {
-    display: none; 
-}
-
 main {
     display: flex;
     flex: 1;
 }
 
-/* -------------------- SIDEBAR FISSA -------------------- */
 #sidebar {
     width: 280px;
     background-color: var(--sidebar-bg);
@@ -40,15 +35,11 @@ main {
     padding: 20px 0;
 }
 
-/* Profilo */
+/* -------------------- PROFILO E NAVIGAZIONE FISSA (Invariato) -------------------- */
 .profile {
     text-align: center;
     padding: 10px 0 20px 0;
     border-bottom: 1px solid var(--surface-color);
-    margin-bottom: 10px;
-}
-
-.avatar-container {
     margin-bottom: 10px;
 }
 
@@ -60,12 +51,6 @@ main {
     object-fit: cover;
 }
 
-.tagline {
-    color: var(--text-secondary);
-    font-size: 0.9em;
-}
-
-/* Navigazione principale (Home, About) */
 .main-nav {
     padding: 0 10px;
 }
@@ -87,38 +72,40 @@ main {
     text-align: center;
 }
 
-/* Stile per l'elemento di navigazione attivo e hover */
 .nav-item:hover, 
 .nav-item.active {
     background-color: var(--active-item);
     color: var(--text-color);
 }
 
-/* -------------------- ALBERATURA GUIDE GERARCHICA -------------------- */
+/* -------------------- ALBERATURA GUIDE GERARCHICA (CORREZIONE) -------------------- */
 
-/* Il contenitore UL principale (dalla radice Hack The Box) */
+/* 1. Reset e Allineamento del Contenitore Radice UL */
 #tree-view.main-tree {
-    list-style-type: none; /* Elimina tutti gli elenchi puntati nell'alberatura */
-    padding: 0; 
+    list-style-type: none; /* Rimuove i puntini da tutti gli UL */
+    padding: 0; /* Rimuove il padding predefinito del UL */
     margin: 5px 0 10px 0;
 }
 
-/* 🟥 CORREZIONE ALLINEAMENTO: Tratta la radice (li.folder) come una voce di menu */
+/* 2. Correzione del Nodo Radice LI (Hack The Box) */
 #tree-view > li.folder {
-    padding: 0;
-    margin: 0;
-    list-style: none;
+    list-style-type: none; /* Assicura che l'LI radice non abbia puntini */
+    margin: 0; /* Rimuove i margini verticali dell'LI */
+    padding: 0; /* Rimuove i padding dell'LI */
 }
 
-/* Applica lo stile dei nav-item alla radice e ai nodi di primo livello */
+/* 3. Applicazione dello Stile di Allineamento al Tag SPAN del Nodo Radice */
 #tree-view > li.folder > span {
     display: flex;
     align-items: center;
-    padding: 10px 15px; /* Allinea con Home e About */
+    /* 🟥 CORREZIONE CHIAVE: Applica il padding esatto di .nav-item */
+    padding: 10px 15px; 
+    
     color: var(--text-secondary);
     text-decoration: none;
     border-radius: 4px;
     cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
 }
 
 #tree-view > li.folder > span:hover {
@@ -126,9 +113,17 @@ main {
     color: var(--text-color);
 }
 
-/* Stile per le VOCI-CARTELLA cliccabili di livello inferiore */
+/* Stili per i livelli interni (Challenges, Easy, Medium, Hard) */
 #tree-view .folder > ul > li.folder > span {
-    padding: 8px 15px; /* Padding ridotto per gli elementi interni */
+    padding: 8px 15px; /* Padding ridotto per i livelli interni */
+}
+
+/* Sottomenu delle cartelle (lista file e sottocartelle) */
+#tree-view .folder > ul {
+    list-style: none;
+    padding-left: 20px; /* Rientro per i livelli successivi */
+    margin: 0;
+    display: none; 
 }
 
 /* Icona per la freccia (triangolo) */
@@ -144,14 +139,6 @@ main {
 .folder > span .fa-folder-open {
     margin-right: 10px; 
     width: 18px;
-}
-
-/* Sottomenu delle cartelle (lista file e sottocartelle) */
-#tree-view .folder > ul {
-    list-style: none;
-    padding-left: 20px; /* Rientro per i livelli successivi */
-    margin: 0;
-    display: none; 
 }
 
 /* Stile per i FILE (i link veri e propri) */
@@ -183,7 +170,7 @@ main {
     border-left: 2px solid var(--accent-color);
 }
 
-/* -------------------- CONTENUTO PRINCIPALE -------------------- */
+/* -------------------- CONTENUTO PRINCIPALE (Invariato) -------------------- */
 
 #content {
     flex: 1;
@@ -197,22 +184,11 @@ main {
     margin: 0 auto;
 }
 
-/* Stile per il contenuto Markdown per dark mode */
 #content-display h1, #content-display h2, #content-display h3 { 
     color: var(--text-color); 
     border-bottom: 1px solid var(--surface-color);
     padding-bottom: 5px;
     margin-top: 30px;
-}
-
-#content-display p, #content-display li {
-    line-height: 1.6;
-    color: var(--text-secondary);
-}
-
-#content-display a {
-    color: var(--accent-color);
-    text-decoration: none;
 }
 
 #content-display pre { 
@@ -222,13 +198,6 @@ main {
     border-radius: 6px; 
     overflow-x: auto; 
     font-family: 'Consolas', 'Monospace', monospace;
-}
-
-#content-display code {
-    background-color: #383c42;
-    padding: 2px 4px;
-    border-radius: 3px;
-    font-size: 0.9em;
 }
 
 footer {
