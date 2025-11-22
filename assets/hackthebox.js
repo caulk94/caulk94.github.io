@@ -11,7 +11,7 @@ const challengeData = [
     {
         name: "Medium",
         children: [
-            { name: "Querier", link: "HTB/Challenges/Medium/Querier" }
+            { name: "Querier", link: "HTB/Challenges/Medium/Querier.md" }
         ]
     },
     {
