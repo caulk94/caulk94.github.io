@@ -21,7 +21,7 @@ body {
 }
 
 header {
-    display: none; /* Rimosso per il layout a sidebar fissa */
+    display: none; 
 }
 
 main {
@@ -34,7 +34,7 @@ main {
     width: 280px;
     background-color: var(--sidebar-bg);
     border-right: 1px solid var(--surface-color);
-    position: fixed; /* Sidebar fissa */
+    position: fixed; 
     height: 100%;
     overflow-y: auto;
     padding: 20px 0;
@@ -65,7 +65,7 @@ main {
     font-size: 0.9em;
 }
 
-/* Navigazione principale (Home, About, Toggler HTB) */
+/* Navigazione principale (Home, About) */
 .main-nav {
     padding: 0 10px;
 }
@@ -89,25 +89,21 @@ main {
 
 /* Stile per l'elemento di navigazione attivo e hover */
 .nav-item:hover, 
-.nav-item.active,
-.tree-toggler:hover {
+.nav-item.active {
     background-color: var(--active-item);
     color: var(--text-color);
 }
 
-/* -------------------- ALBERATURA GUIDE (HACK THE BOX MENU) -------------------- */
+/* -------------------- ALBERATURA GUIDE GERARCHICA -------------------- */
 
-/* Il sottomenu (l'alberatura vera e propria) */
-.tree-submenu {
+/* Il contenitore UL principale (dalla radice Hack The Box) */
+#tree-view.main-tree {
     list-style-type: none;
-    padding: 0;
-    margin: 0;
-    border-radius: 4px;
-    background-color: transparent; 
-    display: none; /* Inizialmente nascosto */
+    padding: 0 10px; /* Allineamento con gli altri nav-item */
+    margin: 5px 0 10px 0;
 }
 
-/* Stile per i contenitori di cartella (le Categorie) */
+/* Stile per i contenitori di cartella (tutti i livelli: Hack The Box, Challenges, Easy...) */
 #tree-view .folder {
     margin-top: 5px;
 }
@@ -128,29 +124,44 @@ main {
     background-color: var(--active-item);
 }
 
-/* Icona per le cartelle (la freccia) */
+/* Icona per la freccia (triangolo) */
 .folder-icon {
     margin-right: 8px;
-    width: 15px;
+    width: 10px;
+    transition: transform 0.2s;
 }
 
-/* SOTTOMENU delle cartelle (lista file) */
+/* Icona della cartella (fa-folder) */
+.folder > span .fa-folder,
+.folder > span .fa-folder-open {
+    margin-right: 15px;
+    width: 18px;
+}
+
+/* Sottomenu delle cartelle (lista file e sottocartelle) */
 #tree-view .folder > ul {
     list-style: none;
-    padding-left: 30px; /* Rientro dei file */
+    padding-left: 20px; /* Rientro per i livelli successivi */
     margin: 0;
-    display: none; /* Lista file nascosta di default */
+    display: none; /* Lista file/sottocartelle nascosta di default */
 }
 
 /* Stile per i FILE (i link veri e propri) */
 .file > a {
     text-decoration: none;
     color: var(--text-secondary);
-    display: block;
-    padding: 5px 0 5px 0;
+    display: flex;
+    align-items: center;
+    padding: 5px 15px;
     border-left: 2px solid transparent;
     transition: color 0.2s, border-left 0.2s;
     font-size: 0.9em;
+}
+
+.file > a i {
+    margin-right: 15px;
+    width: 18px;
+    text-align: center;
 }
 
 .file > a:hover {
@@ -161,6 +172,7 @@ main {
 .file > a.active {
     color: var(--accent-color);
     font-weight: bold;
+    border-left: 2px solid var(--accent-color);
 }
 
 /* -------------------- CONTENUTO PRINCIPALE -------------------- */
@@ -211,7 +223,6 @@ main {
     font-size: 0.9em;
 }
 
-/* Footer (rimosso o nascosto per layout minimalista) */
 footer {
     display: none; 
 }
