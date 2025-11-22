@@ -1,14 +1,15 @@
 /* Color Palette Dark Mode */
 :root {
-    --bg-color: #282c34;       /* Sfondo scuro principale */
-    --surface-color: #383c42;  /* Colore schede/contenuto */
+    --bg-color: #282c34;       /* Sfondo scuro principale (corpo) */
+    --surface-color: #383c42;  /* Colore schede/contenuto (superfici secondarie) */
     --text-color: #ffffff;     /* Testo chiaro */
-    --text-secondary: #aaaaaa; /* Testo secondario */
-    --accent-color: #4a90e2;   /* Colore accento/link */
+    --text-secondary: #aaaaaa; /* Testo secondario/icone non attive */
+    --accent-color: #4a90e2;   /* Colore accento/link (blu) */
     --sidebar-bg: #1c1f23;     /* Sfondo sidebar più scuro */
-    --active-item: #33363b;    /* Hover/selezionato */
+    --active-item: #33363b;    /* Sfondo per hover/selezionato */
 }
 
+/* -------------------- LAYOUT BASE -------------------- */
 body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     margin: 0;
@@ -20,8 +21,7 @@ body {
 }
 
 header {
-    /* Rimosso o nascosto per il layout mostrato */
-    display: none;
+    display: none; /* Rimosso per il layout a sidebar fissa */
 }
 
 main {
@@ -29,7 +29,7 @@ main {
     flex: 1;
 }
 
-/* Sidebar (Menu di Navigazione Fisso) */
+/* -------------------- SIDEBAR FISSA -------------------- */
 #sidebar {
     width: 280px;
     background-color: var(--sidebar-bg);
@@ -40,11 +40,12 @@ main {
     padding: 20px 0;
 }
 
+/* Profilo */
 .profile {
     text-align: center;
     padding: 10px 0 20px 0;
     border-bottom: 1px solid var(--surface-color);
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 
 .avatar-container {
@@ -64,11 +65,9 @@ main {
     font-size: 0.9em;
 }
 
-/* Navigazione principale (Home, Categories, ecc.) */
+/* Navigazione principale (Home, About, Toggler HTB) */
 .main-nav {
     padding: 0 10px;
-    margin-bottom: 30px;
-    border-bottom: 1px solid var(--surface-color);
 }
 
 .nav-item {
@@ -79,6 +78,7 @@ main {
     text-decoration: none;
     border-radius: 4px;
     transition: background-color 0.2s, color 0.2s;
+    cursor: pointer;
 }
 
 .nav-item i {
@@ -87,12 +87,84 @@ main {
     text-align: center;
 }
 
-.nav-item:hover, .nav-item.active {
+/* Stile per l'elemento di navigazione attivo e hover */
+.nav-item:hover, 
+.nav-item.active,
+.tree-toggler:hover {
     background-color: var(--active-item);
     color: var(--text-color);
 }
 
-/* Contenuto principale (deve tenere conto della sidebar fissa) */
+/* -------------------- ALBERATURA GUIDE (HACK THE BOX MENU) -------------------- */
+
+/* Il sottomenu (l'alberatura vera e propria) */
+.tree-submenu {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    border-radius: 4px;
+    background-color: transparent; 
+    display: none; /* Inizialmente nascosto */
+}
+
+/* Stile per i contenitori di cartella (le Categorie) */
+#tree-view .folder {
+    margin-top: 5px;
+}
+
+/* Stile per le VOCI-CARTELLA cliccabili */
+#tree-view .folder > span {
+    cursor: pointer;
+    font-weight: normal;
+    display: flex;
+    align-items: center;
+    padding: 8px 15px;
+    color: var(--text-secondary);
+    transition: color 0.2s, background-color 0.2s;
+}
+
+#tree-view .folder > span:hover {
+    color: var(--text-color);
+    background-color: var(--active-item);
+}
+
+/* Icona per le cartelle (la freccia) */
+.folder-icon {
+    margin-right: 8px;
+    width: 15px;
+}
+
+/* SOTTOMENU delle cartelle (lista file) */
+#tree-view .folder > ul {
+    list-style: none;
+    padding-left: 30px; /* Rientro dei file */
+    margin: 0;
+    display: none; /* Lista file nascosta di default */
+}
+
+/* Stile per i FILE (i link veri e propri) */
+.file > a {
+    text-decoration: none;
+    color: var(--text-secondary);
+    display: block;
+    padding: 5px 0 5px 0;
+    border-left: 2px solid transparent;
+    transition: color 0.2s, border-left 0.2s;
+    font-size: 0.9em;
+}
+
+.file > a:hover {
+    color: var(--text-color);
+}
+
+/* Link del file attualmente attivo */
+.file > a.active {
+    color: var(--accent-color);
+    font-weight: bold;
+}
+
+/* -------------------- CONTENUTO PRINCIPALE -------------------- */
+
 #content {
     flex: 1;
     margin-left: 280px; /* Sposta il contenuto a destra della sidebar */
@@ -104,65 +176,6 @@ main {
     max-width: 900px;
     margin: 0 auto;
 }
-
-/* Stile per l'alberatura (Indice Guide) */
-.guide-tree-container {
-    padding: 0 20px;
-}
-
-.guide-tree-container h3 {
-    color: var(--text-color);
-    font-size: 1.1em;
-    padding-bottom: 5px;
-    border-bottom: 1px solid var(--surface-color);
-    margin-bottom: 10px;
-}
-
-#tree-view {
-    list-style-type: none;
-    padding: 0;
-    margin-top: 10px;
-}
-
-.folder > ul {
-    display: none;
-    list-style: none;
-    padding-left: 15px;
-}
-
-.folder > span {
-    cursor: pointer;
-    font-weight: normal;
-    display: block;
-    padding: 5px 0;
-    color: var(--text-secondary);
-    transition: color 0.2s;
-}
-
-.folder > span:hover {
-    color: var(--text-color);
-}
-
-.file > a {
-    text-decoration: none;
-    color: var(--text-secondary);
-    display: block;
-    padding: 5px 0 5px 5px;
-    border-left: 2px solid transparent;
-    transition: color 0.2s, border-left 0.2s;
-}
-
-.file > a:hover {
-    color: var(--text-color);
-}
-
-/* Link attivo */
-.file > a.active {
-    color: var(--accent-color);
-    font-weight: bold;
-    border-left: 2px solid var(--accent-color);
-}
-
 
 /* Stile per il contenuto Markdown per dark mode */
 #content-display h1, #content-display h2, #content-display h3 { 
@@ -188,7 +201,7 @@ main {
     padding: 15px; 
     border-radius: 6px; 
     overflow-x: auto; 
-    font-family: 'Consolas', 'Monospace';
+    font-family: 'Consolas', 'Monospace', monospace;
 }
 
 #content-display code {
@@ -198,6 +211,7 @@ main {
     font-size: 0.9em;
 }
 
+/* Footer (rimosso o nascosto per layout minimalista) */
 footer {
-    display: none; /* Rimosso */
+    display: none; 
 }
