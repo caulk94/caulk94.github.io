@@ -9,6 +9,7 @@
     --active-item: #33363b;    /* Hover/selezionato */
 }
 
+/* -------------------- LAYOUT BASE -------------------- */
 body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     margin: 0;
@@ -17,11 +18,6 @@ body {
     background-color: var(--bg-color);
     color: var(--text-color);
     min-height: 100vh;
-}
-
-header {
-    /* Rimosso o nascosto per il layout mostrato */
-    display: none;
 }
 
 main {
@@ -44,7 +40,7 @@ main {
     text-align: center;
     padding: 10px 0 20px 0;
     border-bottom: 1px solid var(--surface-color);
-    margin-bottom: 20px;
+    margin-bottom: 10px; /* Ridotto per unire meglio con la nav */
 }
 
 .avatar-container {
@@ -64,11 +60,9 @@ main {
     font-size: 0.9em;
 }
 
-/* Navigazione principale (Home, Categories, ecc.) */
+/* Navigazione principale */
 .main-nav {
     padding: 0 10px;
-    margin-bottom: 30px;
-    border-bottom: 1px solid var(--surface-color);
 }
 
 .nav-item {
@@ -79,6 +73,7 @@ main {
     text-decoration: none;
     border-radius: 4px;
     transition: background-color 0.2s, color 0.2s;
+    cursor: pointer;
 }
 
 .nav-item i {
@@ -105,65 +100,6 @@ main {
     margin: 0 auto;
 }
 
-/* Stile per l'alberatura (Indice Guide) */
-.guide-tree-container {
-    padding: 0 20px;
-}
-
-.guide-tree-container h3 {
-    color: var(--text-color);
-    font-size: 1.1em;
-    padding-bottom: 5px;
-    border-bottom: 1px solid var(--surface-color);
-    margin-bottom: 10px;
-}
-
-#tree-view {
-    list-style-type: none;
-    padding: 0;
-    margin-top: 10px;
-}
-
-.folder > ul {
-    display: none;
-    list-style: none;
-    padding-left: 15px;
-}
-
-.folder > span {
-    cursor: pointer;
-    font-weight: normal;
-    display: block;
-    padding: 5px 0;
-    color: var(--text-secondary);
-    transition: color 0.2s;
-}
-
-.folder > span:hover {
-    color: var(--text-color);
-}
-
-.file > a {
-    text-decoration: none;
-    color: var(--text-secondary);
-    display: block;
-    padding: 5px 0 5px 5px;
-    border-left: 2px solid transparent;
-    transition: color 0.2s, border-left 0.2s;
-}
-
-.file > a:hover {
-    color: var(--text-color);
-}
-
-/* Link attivo */
-.file > a.active {
-    color: var(--accent-color);
-    font-weight: bold;
-    border-left: 2px solid var(--accent-color);
-}
-
-
 /* Stile per il contenuto Markdown per dark mode */
 #content-display h1, #content-display h2, #content-display h3 { 
     color: var(--text-color); 
@@ -172,32 +108,113 @@ main {
     margin-top: 30px;
 }
 
-#content-display p, #content-display li {
-    line-height: 1.6;
+/* -------------------- STILI PER SCHEDE ESPANDIBILI (Hack The Box) -------------------- */
+
+.page-title {
+    color: var(--text-color);
+    font-size: 2.5em;
+    border-bottom: none; 
+    margin-bottom: 20px;
+    margin-top: 0;
+}
+
+#challenges-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Spazio tra le schede principali */
+    margin-top: 20px; /* Spazio sotto H2 Challenges */
+}
+
+/* Categoria Principale (La Card/Box) */
+.challenge-card {
+    background-color: var(--surface-color);
+    border-radius: 8px;
+    overflow: hidden; 
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    cursor: pointer;
+    border-bottom: 1px solid var(--sidebar-bg);
+}
+
+.card-header:hover {
+    background-color: var(--active-item);
+}
+
+.header-left, .header-right {
+    display: flex;
+    align-items: center;
+}
+
+.card-title {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: var(--text-color);
+    margin-left: 10px;
+}
+
+/* Icone */
+.icon-folder {
+    color: var(--accent-color);
+    font-size: 1.1em;
+}
+
+.toggle-icon {
+    transition: transform 0.3s ease;
     color: var(--text-secondary);
 }
 
-#content-display a {
-    color: var(--accent-color);
-    text-decoration: none;
+/* Stile per la card espansa */
+.challenge-card.expanded .toggle-icon {
+    transform: rotate(180deg);
+}
+/* Stile per la cartella aperta */
+.challenge-card.expanded .icon-folder {
+     color: var(--text-color);
 }
 
-#content-display pre { 
-    background-color: #1a1e23; /* Sfondo del codice più scuro */
-    color: #e6e6e6; 
-    padding: 15px; 
-    border-radius: 6px; 
-    overflow-x: auto; 
-    font-family: 'Consolas', 'Monospace';
+/* Contenuto Espandibile (Sottocategorie/Macchine) */
+.card-content {
+    background-color: var(--surface-color);
+    max-height: 0;
+    transition: max-height 0.4s ease-out; /* Animazione di espansione fluida */
+    overflow: hidden;
 }
 
-#content-display code {
-    background-color: #383c42;
-    padding: 2px 4px;
-    border-radius: 3px;
-    font-size: 0.9em;
+.subchallenges-list {
+    padding: 0;
 }
 
-footer {
-    display: none; /* Rimosso */
+/* Stile per le singole sottocategorie (elementi interni: le macchine) */
+.challenge-item.sub-item {
+    padding: 10px 20px;
+    border-top: 1px solid var(--sidebar-bg); /* Linea di separazione */
+}
+
+.challenge-item.sub-item:hover {
+    background-color: #40444b; /* Leggero hover per i sub-item */
+}
+
+.challenge-item.sub-item .item-header {
+    display: flex;
+    justify-content: flex-start; /* Allinea a sinistra */
+    align-items: center;
+    width: 100%;
+}
+
+.challenge-item.sub-item .item-title {
+    font-weight: normal;
+    font-size: 1em;
+    color: var(--text-secondary);
+    transition: color 0.2s;
+    margin-left: 10px;
+    flex-grow: 1; 
+}
+.challenge-item.sub-item:hover .item-title {
+    color: var(--text-color); 
 }
