@@ -36,6 +36,34 @@ const treeView = document.getElementById('tree-view');
 const contentDisplay = document.getElementById('content-display');
 
 /**
+ * Funzione per caricare e visualizzare il contenuto del file
+ */
+function loadFileContent(path) {
+    document.querySelectorAll('.file a').forEach(a => a.classList.remove('active'));
+    const activeLink = document.querySelector(`a[data-path="${path}"]`);
+    if (activeLink) {
+        activeLink.classList.add('active');
+    }
+
+    fetch(path)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Impossibile caricare il file: ${path} (Status: ${response.status})`);
+            }
+            return response.text();
+        })
+        .then(markdownText => {
+            const htmlContent = marked.parse(markdownText);
+            contentDisplay.innerHTML = htmlContent;
+            document.getElementById('content').scrollTop = 0;
+        })
+        .catch(error => {
+            console.error('Errore durante il caricamento del file:', error);
+            contentDisplay.innerHTML = `<p style="color: red;">Errore nel caricamento della guida: ${error.message}. Verifica che il file esista al percorso specificato in script.js.</p>`;
+        });
+}
+
+/**
  * Funzione per generare l'HTML dell'alberatura (ricorsiva)
  */
 function buildTree(structure, parentElement) {
@@ -59,7 +87,6 @@ function buildTree(structure, parentElement) {
                 folderSpan.onclick = function() {
                     const isHidden = subList.style.display === 'none' || subList.style.display === '';
                     
-                    // Toggle visibilità
                     subList.style.display = isHidden ? 'block' : 'none';
                     
                     // Aggiorna l'icona della freccia e della cartella
@@ -83,7 +110,7 @@ function buildTree(structure, parentElement) {
                 fileLink.textContent = key;
                 fileLink.href = '#'; 
                 fileLink.setAttribute('data-path', item); 
-                fileLink.innerHTML = `<i class="fas fa-file-alt"></i> ${key}`; // Aggiunge l'icona del file
+                fileLink.innerHTML = `<i class="fas fa-file-alt"></i> ${key}`;
 
                 // Gestore di eventi per il click sul file: carica il contenuto
                 fileLink.onclick = function(e) {
@@ -98,43 +125,8 @@ function buildTree(structure, parentElement) {
     }
 }
 
-/**
- * Funzione per caricare e visualizzare il contenuto del file
- */
-function loadFileContent(path) {
-    // Rimuovi eventuali classi 'active' dai link precedenti e imposta il nuovo attivo
-    document.querySelectorAll('.file a').forEach(a => a.classList.remove('active'));
-    const activeLink = document.querySelector(`a[data-path="${path}"]`);
-    if (activeLink) {
-        activeLink.classList.add('active');
-    }
-
-    // Carica il file tramite fetch
-    fetch(path)
-        .then(response => {
-            if (!response.ok) {
-                // Se il file non viene trovato (es. 404), lancia un errore
-                throw new Error(`Impossibile caricare il file: ${path} (Status: ${response.status})`);
-            }
-            return response.text();
-        })
-        .then(markdownText => {
-            // Converte il Markdown in HTML usando la libreria marked.js
-            const htmlContent = marked.parse(markdownText);
-            contentDisplay.innerHTML = htmlContent;
-            
-            // Scrolla in cima al contenuto
-            document.getElementById('content').scrollTop = 0;
-        })
-        .catch(error => {
-            console.error('Errore durante il caricamento del file:', error);
-            contentDisplay.innerHTML = `<p style="color: red;">Errore nel caricamento della guida: ${error.message}. Verifica che il file esista al percorso specificato in script.js.</p>`;
-        });
-}
-
 
 // Avvia la generazione dell'alberatura quando la pagina è caricata
 document.addEventListener('DOMContentLoaded', () => {
-    // Avvia la generazione dell'alberatura usando la struttura definita
     buildTree(guideStructure, treeView);
 });
