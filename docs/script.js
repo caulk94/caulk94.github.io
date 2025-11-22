@@ -1,29 +1,27 @@
-// 1. Definisci l'alberatura delle guide
-// Ogni "cartella" è un oggetto con una proprietà 'children'
-// Ogni "file" è una stringa che punta al percorso del file .md
+// Struttura delle Guide (COME PRIMA)
 const guideStructure = {
-    'guide-1': {
+    // Le chiavi di primo livello sono le TUE CATEGORIE (cartelle)
+    'Web Exploitation': {
         children: {
-            'Introduzione': 'guides/guide-1/intro.md',
-            'Passo A': 'guides/guide-1/step-a.md'
+            'Introduzione al Web': 'guides/web/intro.md',
+            'SQL Injection Basics': 'guides/web/sql-basics.md'
         }
     },
-    'guide-2': {
+    'Pwn': {
         children: {
-            'Setup Iniziale': 'guides/guide-2/setup.md',
-            'Panoramica Generale': 'guides/guide-2/overview.md'
+            'Buffer Overflow': 'guides/pwn/buffer-overflow.md',
+            'Format String Attack': 'guides/pwn/format-string.md'
         }
     },
-    // Aggiungi altre guide qui...
+    // Aggiungi qui le tue altre categorie/cartelle
 };
 
 const treeView = document.getElementById('tree-view');
 const contentDisplay = document.getElementById('content-display');
+const htbToggler = document.getElementById('htb-toggler'); // Il nuovo interruttore principale
 
 /**
- * 2. Funzione per generare l'HTML dell'alberatura (ricorsiva)
- * @param {object} structure - L'oggetto della struttura delle guide
- * @param {HTMLElement} parentElement - L'elemento UL genitore in cui inserire i nuovi elementi
+ * Funzione per generare l'HTML dell'alberatura (ricorsiva)
  */
 function buildTree(structure, parentElement) {
     for (const key in structure) {
@@ -31,40 +29,41 @@ function buildTree(structure, parentElement) {
             const item = structure[key];
 
             if (typeof item === 'object' && item.children) {
-                // È una cartella
+                // È una cartella (Categoria)
                 const folderLi = document.createElement('li');
                 folderLi.className = 'folder';
 
                 const folderSpan = document.createElement('span');
-                folderSpan.textContent = `▶ ${key}`; // Usa un triangolo per indicare che è espandibile
-
+                folderSpan.innerHTML = `<span class="folder-icon">▶</span> ${key}`; 
+                
                 const subList = document.createElement('ul');
 
-                // Aggiungi un gestore di eventi per espandere/comprimere la cartella
+                // Gestore di eventi per espandere/comprimere la cartella
                 folderSpan.onclick = function() {
                     const isHidden = subList.style.display === 'none' || subList.style.display === '';
                     subList.style.display = isHidden ? 'block' : 'none';
-                    folderSpan.textContent = isHidden ? `▼ ${key}` : `▶ ${key}`;
+                    // Aggiorna l'icona della freccia (triangolo)
+                    folderSpan.querySelector('.folder-icon').textContent = isHidden ? '▼' : '▶';
                 };
 
                 folderLi.appendChild(folderSpan);
                 folderLi.appendChild(subList);
                 parentElement.appendChild(folderLi);
 
-                // Ricorsione per le sottocartelle/file
+                // Ricorsione per i file all'interno della cartella
                 buildTree(item.children, subList);
 
             } else if (typeof item === 'string') {
-                // È un file
+                // È un file (.md)
                 const fileLi = document.createElement('li');
                 fileLi.className = 'file';
 
                 const fileLink = document.createElement('a');
                 fileLink.textContent = key;
-                fileLink.href = '#'; // Impedisce il ricaricamento della pagina
-                fileLink.setAttribute('data-path', item); // Memorizza il percorso del file
+                fileLink.href = '#'; 
+                fileLink.setAttribute('data-path', item); 
 
-                // 3. Gestore di eventi per il click sul file
+                // Gestore di eventi per il click sul file: carica il contenuto
                 fileLink.onclick = function(e) {
                     e.preventDefault();
                     loadFileContent(this.getAttribute('data-path'));
@@ -78,19 +77,16 @@ function buildTree(structure, parentElement) {
 }
 
 /**
- * 4. Funzione per caricare e visualizzare il contenuto del file
- * @param {string} path - Il percorso del file Markdown
+ * Funzione per caricare e visualizzare il contenuto del file (INVARIATA)
  */
 function loadFileContent(path) {
-    // Rimuovi eventuali classi 'active' dai link precedenti
+    // Rimuovi eventuali classi 'active' dai link precedenti e imposta il nuovo attivo
     document.querySelectorAll('.file a').forEach(a => a.classList.remove('active'));
-    // Aggiungi la classe 'active' al link cliccato
     const activeLink = document.querySelector(`a[data-path="${path}"]`);
     if (activeLink) {
         activeLink.classList.add('active');
     }
 
-    // Carica il file tramite fetch
     fetch(path)
         .then(response => {
             if (!response.ok) {
@@ -99,10 +95,9 @@ function loadFileContent(path) {
             return response.text();
         })
         .then(markdownText => {
-            // 5. Converte il Markdown in HTML
+            // Converte il Markdown in HTML
             const htmlContent = marked.parse(markdownText);
             contentDisplay.innerHTML = htmlContent;
-            // Scrolla in cima al contenuto
             document.getElementById('content').scrollTop = 0;
         })
         .catch(error => {
@@ -111,13 +106,38 @@ function loadFileContent(path) {
         });
 }
 
-// Avvia la generazione dell'alberatura quando la pagina è caricata
-document.addEventListener('DOMContentLoaded', () => {
-    buildTree(guideStructure, treeView);
 
-    // Se c'è un file da aprire all'avvio, caricalo (opzionale)
-    const firstFile = Object.values(guideStructure)[0]?.children ? Object.values(guideStructure)[0].children[Object.keys(Object.values(guideStructure)[0].children)[0]] : null;
-    if (firstFile) {
-        // loadFileContent(firstFile); // Rimuovi il commento per caricare la prima guida automaticamente
+// Avvia la generazione dell'alberatura e aggiungi la logica di toggling principale
+document.addEventListener('DOMContentLoaded', () => {
+    // 1. Costruisce l'alberatura delle categorie all'interno di #tree-view
+    buildTree(guideStructure, treeView);
+    
+    // 2. Aggiunge il gestore per l'interruttore "Hack The Box"
+    htbToggler.addEventListener('click', () => {
+        const isHidden = treeView.style.display === 'none' || treeView.style.display === '';
+        treeView.style.display = isHidden ? 'block' : 'none';
+        
+        // Opzionale: cambia l'icona del toggler principale
+        htbToggler.innerHTML = isHidden 
+            ? '<i class="fas fa-folder-open"></i> Hack The Box' 
+            : '<i class="fas fa-folder"></i> Hack The Box';
+        
+        // Rimuove la classe 'active' se il menu viene richiuso, per pulizia
+        if (!isHidden) {
+             document.querySelectorAll('.file a').forEach(a => a.classList.remove('active'));
+        }
+    });
+
+    // 3. (Opzionale) Apri la prima guida all'avvio:
+    // Rimuovi il commento se vuoi che il contenuto sia visibile subito:
+    /*
+    const firstCategory = Object.values(guideStructure)[0]?.children;
+    if (firstCategory) {
+        const firstFile = Object.values(firstCategory)[0];
+        if (firstFile) {
+            loadFileContent(firstFile);
+            treeView.style.display = 'block'; // Mostra il sottomenu
+        }
     }
+    */
 });
