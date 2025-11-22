@@ -26,7 +26,6 @@ const guideStructure = {
     }
 };
 
-const treeView = document.getElementById('tree-view');
 const contentDisplay = document.getElementById('content-display');
 
 /**
@@ -116,9 +115,3 @@ function buildTree(structure, parentElement) {
         }
     }
 }
-
-
-// Avvia la generazione dell'alberatura quando la pagina è caricata
-document.addEventListener('DOMContentLoaded', () => {
-    buildTree(guideStructure, treeView);
-});
