@@ -23,7 +23,6 @@ const challengeData = [
 ];
 
 // Riferimenti DOM (Assicurati che questi ID esistano in hackthebox.html)
-const challengesListWrapper = document.getElementById('challenges-list'); // Contenitore delle schede espandibili
 const contentDisplayWrapper = document.getElementById('content-display');
 let allCardsHTML = ''; // Variabile globale per memorizzare l'HTML iniziale delle card
 
