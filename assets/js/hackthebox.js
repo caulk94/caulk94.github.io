@@ -35,10 +35,12 @@ function generateSubchallengesHTML(children) {
     let html = '<div class="subchallenges-list">';
     
     children.forEach(child => {
-        // 🟥 MODIFICA CHIAVE: Uso di un tag <a> con href diretto 🟥
+        // 🟥 MODIFICA CHIAVE QUI: PUNTA A writeup.html con parametro path 🟥
+        const targetUrl = `writeup.html?path=${encodeURIComponent(child.link)}`;
+        
         html += `
             <div class="challenge-item sub-item">
-                <a href="${child.link}" class="item-link">
+                <a href="${targetUrl}" class="item-link">
                     <div class="item-header">
                         <i class="fas fa-file-alt icon-file"></i>
                         <span class="item-title">${child.name}</span>
