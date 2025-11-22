@@ -22,11 +22,6 @@ const guideStructure = {
                         }
                     }
                 }
-            },
-            'Starting Point': {
-                children: {
-                    'Guida al Setup': 'guides/htb/starting_point/setup.md'
-                }
             }
         }
     }
