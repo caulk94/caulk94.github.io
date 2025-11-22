@@ -1,0 +1,129 @@
+/* Color Palette Dark Mode (Invariato) */
+:root {
+    --bg-color: #282c34;
+    --surface-color: #383c42;
+    --text-color: #ffffff;
+    --text-secondary: #aaaaaa;
+    --accent-color: #4a90e2;
+    --sidebar-bg: #1c1f23;
+    --active-item: #33363b;
+}
+
+/* ... (LAYOUT BASE e PROFILO & NAVIGAZIONE FISSA invariati) ... */
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    min-height: 100vh;
+}
+/* ... (main, sidebar, profile, nav-item, etc. invariati) ... */
+
+
+/* -------------------- ALBERATURA GUIDE GERARCHICA -------------------- */
+
+/* Il contenitore UL principale */
+#tree-view.main-tree {
+    list-style-type: none;
+    padding: 0; 
+    margin: 5px 0 10px 0;
+}
+
+/* Correzione del Nodo Radice LI (Hack The Box) */
+#tree-view > li.folder {
+    list-style: none;
+    margin: 0; 
+    padding: 0;
+}
+
+/* Stile applicato al tag SPAN di tutte le cartelle */
+#tree-view .folder > span {
+    /* 🟥 MODIFICA CHIAVE: Usa Flexbox per allineare gli elementi */
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Spinge gli estremi ai lati */
+    
+    padding: 8px 15px; 
+    color: var(--text-secondary);
+    text-decoration: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+/* Applica il padding corretto al nodo radice per allinearlo a Home/About */
+#tree-view > li.folder > span {
+    padding: 10px 15px; 
+}
+
+#tree-view .folder > span:hover {
+    background-color: var(--active-item);
+    color: var(--text-color);
+}
+
+
+/* Icona della cartella (fa-folder) */
+.folder > span .fa-folder,
+.folder > span .fa-folder-open {
+    /* Manteniamo l'icona a sinistra con il testo, ma rimuoviamo il margin-right per il testo */
+    margin-right: 10px; 
+    width: 18px;
+}
+
+/* Icona per la freccia (triangolo) */
+.folder-icon {
+    /* 🟥 MODIFICA CHIAVE: Rimuove il margine precedente; Flexbox la sposta a destra */
+    margin-right: 0; 
+    width: 10px;
+    text-align: center;
+    transition: transform 0.2s;
+    /* Usa margin-left: auto per spingere l'icona a destra del testo */
+    margin-left: auto; 
+}
+
+
+/* Sottomenu delle cartelle (lista file e sottocartelle) */
+#tree-view .folder > ul {
+    list-style: none;
+    padding-left: 20px; 
+    margin: 0;
+    display: none; 
+}
+
+/* Stile per i FILE (i link veri e propri) */
+.file > a {
+    text-decoration: none;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    padding: 5px 15px;
+    border-left: 2px solid transparent;
+    transition: color 0.2s, border-left 0.2s;
+    font-size: 0.9em;
+}
+
+.file > a i {
+    margin-right: 15px;
+    width: 18px;
+    text-align: center;
+}
+
+.file > a.active {
+    color: var(--accent-color);
+    font-weight: bold;
+    border-left: 2px solid var(--accent-color);
+}
+
+/* -------------------- CONTENUTO PRINCIPALE (Invariato) -------------------- */
+
+#content {
+    flex: 1;
+    margin-left: 280px; 
+    padding: 30px;
+    overflow-y: auto;
+}
+
+/* ... (Altri stili di contenuto invariati) ... */
