@@ -1,3 +1,7 @@
+---
+title: HackTheBox 
+layout: default
+---
 <!DOCTYPE html>
 <html lang="it">
 <head>
@@ -10,21 +14,7 @@
 </head>
 <body>
     <main>
-        <aside id="sidebar">
-            <div class="profile">
-                <div class="avatar-container">
-                    <img src="avatar.png" alt="Avatar" class="avatar"> 
-                </div>
-                <h2>caulk94</h2>
-                <p class="tagline">oks</p>
-            </div>
-                        
-            <nav class="main-nav">
-                <a href="index.html" class="nav-item"><i class="fas fa-home"></i> Home</a>
-                <a href="hackthebox.html" class="nav-item active"><i class="fas fa-folder-open"></i> Hack The Box</a>
-                <a href="about.html" class="nav-item"><i class="fas fa-info-circle"></i> About</a>
-            </nav>
-        </aside>
+        {% include sidebar.html %}
 
         <section id="content">
             <div id="content-display">
