@@ -218,3 +218,15 @@ main {
 .challenge-item.sub-item:hover .item-title {
     color: var(--text-color); 
 }
+
+/* Stile per i nuovi link diretti all'interno delle schede */
+.challenge-item.sub-item .item-link {
+    text-decoration: none; /* Rimuove la sottolineatura */
+    color: inherit; /* Mantiene il colore del testo genitore */
+    display: block; /* Permette al link di occupare tutto lo spazio */
+}
+
+/* Assicurati che l'header interno (che ora è figlio del link) sia formattato */
+.challenge-item.sub-item .item-header {
+    cursor: pointer; /* Mantiene il cursore a forma di mano */
+}
