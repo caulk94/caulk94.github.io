@@ -98,43 +98,51 @@ main {
 
 /* Il contenitore UL principale (dalla radice Hack The Box) */
 #tree-view.main-tree {
-    list-style-type: none;
-    padding: 0 10px; /* Allineamento con gli altri nav-item */
+    list-style-type: none; /* Elimina tutti gli elenchi puntati nell'alberatura */
+    padding: 0; 
     margin: 5px 0 10px 0;
 }
 
-/* Stile per i contenitori di cartella (tutti i livelli: Hack The Box, Challenges, Easy...) */
-#tree-view .folder {
-    margin-top: 5px;
+/* 🟥 CORREZIONE ALLINEAMENTO: Tratta la radice (li.folder) come una voce di menu */
+#tree-view > li.folder {
+    padding: 0;
+    margin: 0;
+    list-style: none;
 }
 
-/* Stile per le VOCI-CARTELLA cliccabili */
-#tree-view .folder > span {
-    cursor: pointer;
-    font-weight: normal;
+/* Applica lo stile dei nav-item alla radice e ai nodi di primo livello */
+#tree-view > li.folder > span {
     display: flex;
     align-items: center;
-    padding: 8px 15px;
+    padding: 10px 15px; /* Allinea con Home e About */
     color: var(--text-secondary);
-    transition: color 0.2s, background-color 0.2s;
+    text-decoration: none;
+    border-radius: 4px;
+    cursor: pointer;
 }
 
-#tree-view .folder > span:hover {
-    color: var(--text-color);
+#tree-view > li.folder > span:hover {
     background-color: var(--active-item);
+    color: var(--text-color);
+}
+
+/* Stile per le VOCI-CARTELLA cliccabili di livello inferiore */
+#tree-view .folder > ul > li.folder > span {
+    padding: 8px 15px; /* Padding ridotto per gli elementi interni */
 }
 
 /* Icona per la freccia (triangolo) */
 .folder-icon {
-    margin-right: 8px;
+    margin-right: 5px; 
     width: 10px;
+    text-align: center;
     transition: transform 0.2s;
 }
 
 /* Icona della cartella (fa-folder) */
 .folder > span .fa-folder,
 .folder > span .fa-folder-open {
-    margin-right: 15px;
+    margin-right: 10px; 
     width: 18px;
 }
 
@@ -143,7 +151,7 @@ main {
     list-style: none;
     padding-left: 20px; /* Rientro per i livelli successivi */
     margin: 0;
-    display: none; /* Lista file/sottocartelle nascosta di default */
+    display: none; 
 }
 
 /* Stile per i FILE (i link veri e propri) */
@@ -179,7 +187,7 @@ main {
 
 #content {
     flex: 1;
-    margin-left: 280px; /* Sposta il contenuto a destra della sidebar */
+    margin-left: 280px; 
     padding: 30px;
     overflow-y: auto;
 }
@@ -208,7 +216,7 @@ main {
 }
 
 #content-display pre { 
-    background-color: #1a1e23; /* Sfondo del codice più scuro */
+    background-color: #1a1e23; 
     color: #e6e6e6; 
     padding: 15px; 
     border-radius: 6px; 
