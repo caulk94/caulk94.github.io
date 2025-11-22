@@ -22,14 +22,13 @@ const challengeData = [
     }
 ];
 
-// Riferimenti DOM (Assicurati che questi ID esistano in hackthebox.html)
+// Riferimenti DOM (CORREZIONE: tutti gli elementi DOM necessari devono essere referenziati)
+const challengesListWrapper = document.getElementById('challenges-list'); 
 const contentDisplayWrapper = document.getElementById('content-display');
-let allCardsHTML = ''; // Variabile globale per memorizzare l'HTML iniziale delle card
-
-// Riferimento al bottone (Deve essere esterno a content-display per funzionare correttamente)
 const backButton = document.getElementById('back-to-challenges'); 
-const pageTitleElement = document.querySelector('.page-title'); // Riferimento al titolo H1 "Hack The Box"
-const pageSubtitleElement = document.querySelector('#content-display h2'); // Riferimento al titolo H2 "Challenge Write-Ups"
+const pageSubtitleElement = document.querySelector('#content-display h2'); 
+
+let allCardsHTML = ''; // Variabile globale per memorizzare l'HTML iniziale delle card
 
 
 // ==========================================================
@@ -40,35 +39,32 @@ const pageSubtitleElement = document.querySelector('#content-display h2'); // Ri
  * Funzione per caricare e visualizzare il contenuto del file Markdown (Guida)
  */
 function loadFileContent(path) {
-    // 1. Logica di navigazione: Nascondi la lista e mostra il bottone Indietro
-    challengesListWrapper.style.display = 'none';
-    if (pageSubtitleElement) pageSubtitleElement.style.display = 'none'; // Nasconde l'H2 "Challenge Write-Ups"
-    if (backButton) backButton.style.display = 'flex'; // Mostra il bottone Indietro
+    // Nascondi la lista e mostra il bottone Indietro
+    if (challengesListWrapper) challengesListWrapper.style.display = 'none';
+    if (pageSubtitleElement) pageSubtitleElement.style.display = 'none'; 
+    if (backButton) backButton.style.display = 'flex'; 
     
     // Svuota e prepara il contenitore per la guida
-    contentDisplayWrapper.innerHTML = ''; 
+    if (contentDisplayWrapper) contentDisplayWrapper.innerHTML = ''; 
 
     fetch(path)
         .then(response => {
             if (!response.ok) {
-                // Se il file non esiste, crea un percorso di errore pulito
                 throw new Error(`Impossibile caricare il file: ${path} (Status: ${response.status})`);
             }
             return response.text();
         })
         .then(markdownText => {
-            // Converte il Markdown in HTML
             const htmlContent = marked.parse(markdownText);
             
-            // Inietta il contenuto renderizzato
-            contentDisplayWrapper.innerHTML = htmlContent;
+            if (contentDisplayWrapper) contentDisplayWrapper.innerHTML = htmlContent;
             
-            // Scrolla in cima al contenuto della pagina (per UX)
-            document.getElementById('content').scrollTop = 0;
+            const contentSection = document.getElementById('content');
+            if (contentSection) contentSection.scrollTop = 0;
         })
         .catch(error => {
             console.error('Errore durante il caricamento del file:', error);
-            contentDisplayWrapper.innerHTML = `<p style="color: red;">Errore nel caricamento della guida: ${error.message}. Verifica che il file esista al percorso specificato.</p>`;
+            if (contentDisplayWrapper) contentDisplayWrapper.innerHTML = `<p style="color: red;">Errore nel caricamento della guida: ${error.message}. Verifica che il file esista al percorso specificato.</p>`;
         });
 }
 
@@ -86,7 +82,6 @@ function generateSubchallengesHTML(children) {
     let html = '<div class="subchallenges-list">';
     
     children.forEach(child => {
-        // Usa data-path per memorizzare il percorso del file
         html += `
             <div class="challenge-item sub-item">
                 <div class="item-header" data-path="${child.link}">
@@ -154,7 +149,6 @@ function applyToggleLogic() {
             const path = itemHeader.getAttribute('data-path');
             if (path) {
                 loadFileContent(path);
-                window.scrollTo({ top: 0, behavior: 'smooth' });
             }
         });
     });
@@ -179,9 +173,6 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // 3. Configura il bottone Indietro
     if (backButton) {
-        // All'inizio, il bottone è nascosto
-        backButton.style.display = 'none'; 
-        
         // Listener per tornare alla lista
         backButton.addEventListener('click', () => {
             // Nasconde il bottone Indietro
@@ -190,10 +181,11 @@ document.addEventListener('DOMContentLoaded', () => {
             // Riporta la vista a Challenge Write-Ups
             if (pageSubtitleElement) pageSubtitleElement.style.display = 'block';
             
-            // Inietta di nuovo la lista delle cards
-            contentDisplayWrapper.innerHTML = '';
-            challengesListWrapper.style.display = 'flex'; // o 'block'
-            challengesListWrapper.innerHTML = allCardsHTML; 
+            // Riporta la lista delle cards
+            if (challengesListWrapper) {
+                challengesListWrapper.style.display = 'block'; // Fai riapparire il contenitore
+                challengesListWrapper.innerHTML = allCardsHTML; // Ricarica l'HTML delle card
+            }
             
             // Riaplica la logica di espansione/click ai nuovi elementi DOM
             applyToggleLogic(); 

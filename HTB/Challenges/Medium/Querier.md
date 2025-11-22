@@ -8,9 +8,6 @@ sudo sh -c "echo '10.129.59.155 querier' >> /etc/hosts"
 ## Port Scanning
 ```shell
 rustscan -a querier --ulimit 5000 -- -sVC -Pn -n
-#OR
-rustscan -t 10000 -b 300 -a querier --ulimit 5000 -- -Pn -n -sVC -Pn -n -sVC --max-rate 300 -T1 --max-rtt-timeout 10000ms
-
 
 Open 10.129.59.155:135
 Open 10.129.59.155:139
