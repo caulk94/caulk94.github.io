@@ -2,15 +2,16 @@
 title: caulk94 | HTB - Querier
 layout: default
 ---
+
 <div id="content-display">
-    # Querier
+    <h1>Querier<
     ```table-of-contents
     ```
-    ## IP
+    <h2>IP</h1>
     ```shell
     sudo sh -c "echo '10.129.59.155 querier' >> /etc/hosts"
     ```
-    ## Port Scanning
+    <h2>Port Scanning</h2>
     ```shell
     rustscan -a querier --ulimit 5000 -- -sVC -Pn -n
 
@@ -108,8 +109,8 @@ layout: default
     |   3:1:1: 
     |_    Message signing enabled but not required
     ```
-    ## Exploiting
-    ### 445 - SMB
+    <h2>Exploiting</h2>
+    <h3>445 - SMB</h3>
     Proviamo ad enumerare le share con l'utente anonimo:
     ```shell
     smbclient -L querier -U anonymous%anonymous
@@ -314,7 +315,7 @@ layout: default
 
     Abbiamo un utente e una password.
     Proviamo ad usarli per accedere al servizio MS-SQL.
-    ### 1443 - MS-SQL
+    <h3>1443 - MS-SQL</h3>
     Vediamo la porta `1433` aperta con `ms-sql-s` esposto:
 
     Banner Grabbing::
@@ -336,7 +337,7 @@ layout: default
     SQL (QUERIER\reporting  reporting@volume)> 
     ```
     Ci siamo loggati!
-    ## Privilege Escalation
+    <h2>Privilege Escalation</h2>
     Controllo se ho i permessi di sysadmin:
     ```shell
     SQL (QUERIER\reporting  reporting@volume)> SELECT IS_SRVROLEMEMBER('sysadmin');
@@ -526,14 +527,14 @@ layout: default
 
     nt authority\system
     ```
-    ## User flag
+    <h2>User flag</h2>
     ```shell
     type C:\Users\mssql-svc\Desktop\user.txt
 
     61cd************************b2b4
     ```
 
-    ## Root flag
+    <h2>Root flag</h2>
     ```shell
     type C:\Users\Administrator\Desktop\root.txt
 
