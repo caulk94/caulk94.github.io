@@ -3,23 +3,19 @@ const challengeData = [
     {
         name: "Easy",
         children: [
-            { name: "Blue", link: "guides/htb/easy/blue.md" },
-            { name: "Devel", link: "guides/htb/easy/devel.md" },
-            { name: "Optimum", link: "guides/htb/easy/optimum.md" }
+            { name: "_", link: "#" }
         ]
     },
     {
         name: "Medium",
         children: [
-            { name: "Chatterbox", link: "guides/htb/medium/chatterbox.md" },
-            { name: "Bart", link: "guides/htb/medium/bart.md" },
-            { name: "Jeeves", link: "guides/htb/medium/jeeves.md" }
+            { name: "Querier", link: "HTB/Challenge/Medium/Querier" }
         ]
     },
     {
         name: "Hard",
         children: [
-            { name: "Shiro", link: "guides/htb/hard/shiro.md" }
+            { name: "_", link: "#" }
         ]
     }
 ];
