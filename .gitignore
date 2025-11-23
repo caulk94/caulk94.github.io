@@ -2,3 +2,5 @@ Gemfile
 Gemfile.lock
 .jekyll-cache
 _site
+
+# cd ~\Desktop\caulk94.github.io; bundle exec jekyll serve
