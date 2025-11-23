@@ -23,8 +23,6 @@ const challengeData = [
 ];
 
 const challengeList = document.getElementById('challenges-list');
-// La variabile contentDisplay e la funzione loadFileContent non sono più necessarie
-// per il reindirizzamento, ma le lasciamo se servono altrove.
 
 /**
  * Funzione per generare il contenuto HTML delle singole macchine (LINK REALI)
@@ -35,8 +33,8 @@ function generateSubchallengesHTML(children) {
     let html = '<div class="subchallenges-list">';
     
     children.forEach(child => {
-        // 🟥 MODIFICA CHIAVE QUI: PUNTA A writeup.html con parametro path 🟥
-        const targetUrl = `writeup.html?path=${encodeURIComponent(child.link)}`;
+        // 🟥 MODIFICA CHIAVE: targetUrl è ORA il link diretto al file 🟥
+        const targetUrl = child.link;
         
         html += `
             <div class="challenge-item sub-item">
@@ -56,7 +54,6 @@ function generateSubchallengesHTML(children) {
 
 /**
  * Funzione per generare l'HTML completo della categoria principale (il box espandibile)
- * (INVARIATA, ma il suo output ora contiene link reali)
  */
 function generateChallengeCard(challenge) {
     const subcontent = generateSubchallengesHTML(challenge.children);
@@ -81,10 +78,9 @@ function generateChallengeCard(challenge) {
 }
 
 /**
- * Funzione per applicare la logica di espansione/compressione (Semplificata)
+ * Funzione per applicare la logica di espansione/compressione (INVARIATA)
  */
 function applyToggleLogic() {
-    // Logica di espansione/compressione delle schede (Easy, Medium, Hard)
     document.querySelectorAll('.toggle-btn').forEach(button => {
         button.addEventListener('click', () => {
             const targetId = button.getAttribute('data-target');
@@ -100,20 +96,16 @@ function applyToggleLogic() {
             }
         });
     });
-    
-    // Non è più necessaria la logica di click sui file, poiché ora usiamo <a> tag
 }
 
 
 // 3. Esecuzione
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Genera tutte le schede
     let allCardsHTML = '';
     challengeData.forEach(cat => {
         allCardsHTML += generateChallengeCard(cat);
     });
     
-    // Inietta l'HTML e applica la logica
     if (challengeList) {
         challengeList.innerHTML = allCardsHTML;
         applyToggleLogic();

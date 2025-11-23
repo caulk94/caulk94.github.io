@@ -1,14 +1,22 @@
 /* Definizioni dei Colori per la Shell (Invariate) */
 :root {
-    --shell-prompt-color: #00ff7f; 
+    --shell-prompt-color: #00c090; 
     --shell-warning-color: #ffaa00; 
     --shell-error-color: #ff0000;   
     --shell-info-color: #4a90e2;    
     --shell-title-color: #ffffff;   
     --shell-separator-color: #555;  
+    --text-color: #ffffff;
 }
 
 /* -------------------- STILI SPECIFICI PER GLI HEADER (ALTA SPECIFICITÀ) -------------------- */
+
+/* Forza il colore del testo normale (paragrafi, liste) ad essere bianco */
+#content-display p,
+#content-display li,
+#content-display div {
+    color: var(--text-color) !important; 
+}
 
 /* H1: Titolo principale */
 #content-display h1 {
@@ -42,16 +50,25 @@
 /* Miglioriamo l'aspetto dei blocchi di codice */
 #content-display pre { 
     background-color: #1a1e23 !important; 
-    border: 1px solid #333 !important; 
+    border: 1px solid #333 !important;
     border-left: 5px solid var(--shell-info-color) !important; 
     padding: 15px !important; 
     border-radius: 6px !important; 
+
+    color: var(--text-color) !important;
+
+    /* 🟥 MODIFICHE CHIAVE PER TESTO A CAPO 🟥 */
+    overflow-x: hidden; /* Nasconde qualsiasi scrollbar orizzontale */
+    white-space: pre-wrap !important; /* Permette il wrap, ma mantiene gli a capo originali */
+    word-wrap: break-word !important; /* Forza l'andata a capo in caso di parole lunghissime */
+    
+    font-family: 'Consolas', 'Monospace', monospace !important;
 }
 
 /* Stile per il codice inline */
 #content-display code {
-    background-color: #383c42 !important;
-    color: var(--shell-prompt-color) !important; 
+    background-color: #1a1e23 !important;
+    color: var(--text-color) !important; 
     padding: 2px 4px !important;
     border-radius: 3px !important;
 }
